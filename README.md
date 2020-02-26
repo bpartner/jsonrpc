@@ -11,10 +11,11 @@ You can install the package via composer:
 
 ```bash
 composer require bpartner/jsonrpc
+
 php artisan vendor:publish --tag=config
 ```
 ### Configure 
-in `config/jsonrpc.php` set namespace and Bearer token
+in `config/jsonrpc.php` set namespace and Bearer token (default 1234567890)
 
 
 ## Basic Usage
@@ -28,13 +29,13 @@ After creating handler, in handle method put your business logic and return arra
 ``` php
 public function handle(): array
 {
-    $myData = MyBusinessLogicClass::make();
+    $myData = MyBusinessLogicClass::make($this->params);
 
     return ['data' => $myData];
 }
 ```
 
-Send POST request to `/jsonrpc/v1/endpoin` in Json RPC 2.0 standard with Bearer Token.
+Send POST request to `/jsonrpc/v1/endpoint` in Json RPC 2.0 standard with Bearer Token.
 
 
 ``` json
@@ -71,20 +72,23 @@ You can use any route, middleware and guards for your rpc endpoint.
 3. Create your controller and use RpcService, for example:
 
 ``` php
-    private $request;
+namespace App\Http\Controllers
 
-    public function __construct(RpcFormRequest $request)
-    {
-        $this->request = new RpcRequest($request);
-    }
 
-    public function __invoke()
+use Bpartner\Jsonrpc\RpcFormRequest;
+use Bpartner\Jsonrpc\RpcRequest;
+use Bpartner\Jsonrpc\RpcService;
+use Illuminate\Routing\Controller;
+
+class MyContoller extends Controller
+{
+    public function __invoke(RpcFormRequest $request)
     {
-        $rpcService = new RpcService($this->request);
+        $rpcService = new RpcService(new RpcRequest($request));
 
         return $rpcService->run();
     }
-
+}
 ```
 
 ## Important
