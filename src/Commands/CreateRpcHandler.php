@@ -1,6 +1,6 @@
 <?php
 
-namespace Bpartner\jsonrpc\src\Commands;
+namespace Bpartner\Jsonrpc\Commands;
 
 
 use Illuminate\Console\GeneratorCommand;

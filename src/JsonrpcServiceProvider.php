@@ -2,8 +2,8 @@
 
 namespace Bpartner\Jsonrpc;
 
-use Bpartner\jsonrpc\src\Commands\CreateRpcHandler;
-use Bpartner\jsonrpc\src\Http\RpcMiddleware;
+use Bpartner\Jsonrpc\Commands\CreateRpcHandler;
+use Bpartner\Jsonrpc\Http\RpcMiddleware;
 use Illuminate\Support\ServiceProvider;
 
 class JsonrpcServiceProvider extends ServiceProvider
