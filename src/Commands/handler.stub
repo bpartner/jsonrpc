@@ -1,0 +1,30 @@
+<?php
+
+namespace DummyNamespace;
+
+
+use Bpartner\Jsonrpc\Contracts\BaseRpc;
+
+class DummyClass extends BaseRpc
+{
+    /**
+     * Rules for validate request parameters
+     *
+     * @return array|void
+     */
+    protected function rule(): array
+    {
+        return [];
+    }
+
+    /**
+     * Handler for RPC method DummyMethod
+     *
+     * @return array
+     */
+    public function handle(): array
+    {
+        return [];
+    }
+
+}
