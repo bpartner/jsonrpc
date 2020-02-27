@@ -18,7 +18,7 @@ class DummyClass extends BaseRpc
     }
 
     /**
-     * Handler for RPC method DummyMethod
+     * Handler for RPC method
      *
      * @return array
      */
@@ -26,5 +26,4 @@ class DummyClass extends BaseRpc
     {
         return [];
     }
-
 }

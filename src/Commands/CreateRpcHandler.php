@@ -36,5 +36,4 @@ class CreateRpcHandler extends GeneratorCommand
     {
         return __DIR__ . '/handler.stub';
     }
-
 }
