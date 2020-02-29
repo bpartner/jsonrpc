@@ -2,7 +2,6 @@
 
 namespace Bpartner\Jsonrpc\Commands;
 
-
 use Illuminate\Console\GeneratorCommand;
 
 class CreateRpcHandler extends GeneratorCommand
@@ -18,9 +17,11 @@ class CreateRpcHandler extends GeneratorCommand
      */
     protected $type = 'RpcHandler';
 
-    public function handle() {
+    public function handle()
+    {
         parent::handle();
     }
+
     /**
      * Get the default namespace for the class.
      *
@@ -29,11 +30,11 @@ class CreateRpcHandler extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace . '\\' .  config('jsonrpc.rpc_namespace');
+        return $rootNamespace.'\\'.config('jsonrpc.rpc_namespace');
     }
 
     protected function getStub()
     {
-        return __DIR__ . '/handler.stub';
+        return __DIR__.'/handler.stub';
     }
 }

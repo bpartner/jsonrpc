@@ -15,12 +15,12 @@ class JsonrpcServiceProvider extends ServiceProvider
     {
         // Register default route
         if (config('jsonrpc.use_default_route')) {
-            $this->loadRoutesFrom(__DIR__ . '/Http/routes.php');
+            $this->loadRoutesFrom(__DIR__.'/Http/routes.php');
         }
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/config.php' => config_path('jsonrpc.php'),
+                __DIR__.'/../config/config.php' => config_path('jsonrpc.php'),
             ], 'config');
 
             // Registering package commands.
@@ -36,11 +36,11 @@ class JsonrpcServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'jsonrpc');
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'jsonrpc');
 
         // Register simple-rpc middleware for default route
         if (config('jsonrpc.use_default_route')) {
-            $this->app['router']->aliasMiddleware('simple-rpc' , RpcMiddleware::class);
+            $this->app['router']->aliasMiddleware('simple-rpc', RpcMiddleware::class);
         }
     }
 }

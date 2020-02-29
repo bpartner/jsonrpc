@@ -2,7 +2,6 @@
 
 namespace Bpartner\Jsonrpc;
 
-
 class RpcResponse
 {
     public const PARSE_ERROR = -32700;
@@ -17,7 +16,7 @@ class RpcResponse
     private $id;
 
     /**
-     * Create new instance
+     * Create new instance.
      *
      * @return static
      */
@@ -27,7 +26,7 @@ class RpcResponse
     }
 
     /**
-     * Make Error response
+     * Make Error response.
      * @param string     $message
      * @param int        $code
      * @param null       $data
@@ -42,8 +41,8 @@ class RpcResponse
             'error' => [
                 'message' => $message,
                 'data' => $data,
-                'code' => $code
-            ]
+                'code' => $code,
+            ],
         ];
     }
 

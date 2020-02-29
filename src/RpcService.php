@@ -2,7 +2,6 @@
 
 namespace Bpartner\Jsonrpc;
 
-
 use Bpartner\Jsonrpc\Exceptions\RpcException;
 use Bpartner\Jsonrpc\Exceptions\ValidatorError;
 
@@ -36,7 +35,7 @@ class RpcService
     }
 
     /**
-     * Run RPC method
+     * Run RPC method.
      *
      * @return array
      */
@@ -56,11 +55,11 @@ class RpcService
         $class = $this->data->method();
 
         try {
-            $rpc = $namespace . ucfirst($class);
+            $rpc = $namespace.ucfirst($class);
             $this->handler = new $rpc($this->data->params());
         } catch (ValidatorError $exception) {
             $response = $this->response->responseError(
-                'RPC: Invalid param: ' . $exception->getMessage(),
+                'RPC: Invalid param: '.$exception->getMessage(),
                 RpcResponse::INVALID_PARAM,
                 $this->data->toArray()
             );
@@ -78,7 +77,7 @@ class RpcService
     }
 
     /**
-     * Make your code
+     * Make your code.
      */
     private function make(): void
     {
@@ -87,12 +86,12 @@ class RpcService
     }
 
     /**
-     * Get namespace for handlers
+     * Get namespace for handlers.
      *
      * @return string
      */
     private function getNamespace()
     {
-        return app()->getNamespace() . config('jsonrpc.rpc_namespace') . '\\';
+        return app()->getNamespace().config('jsonrpc.rpc_namespace').'\\';
     }
 }

@@ -19,9 +19,10 @@ class RpcMiddleware
             return  response()->json([
                 'status' => 'error',
                 'code' => 401,
-                'message' => 'Unauthorized'
+                'message' => 'Unauthorized',
             ]);
         }
+
         return $next($request);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Bpartner\Jsonrpc\Contracts;
 
-
 use Bpartner\Jsonrpc\Exceptions\ValidatorError;
 use Illuminate\Support\Facades\Validator;
 

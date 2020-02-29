@@ -2,10 +2,8 @@
 
 namespace Bpartner\Jsonrpc;
 
-
 /**
- * Class RpcRequest
- *
+ * Class RpcRequest.
  */
 class RpcRequest
 {
@@ -80,7 +78,7 @@ class RpcRequest
             'id' => $this->id,
             'method' => $this->method,
             'params' => $this->params,
-            'jsonrpc' => "2.0"
+            'jsonrpc' => '2.0',
         ];
     }
 }

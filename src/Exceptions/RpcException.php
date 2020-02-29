@@ -2,7 +2,6 @@
 
 namespace Bpartner\Jsonrpc\Exceptions;
 
-
 use Exception;
 
 class RpcException extends Exception
