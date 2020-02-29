@@ -2,7 +2,6 @@
 
 namespace Bpartner\Jsonrpc\Exceptions;
 
-
 use Exception;
 use Illuminate\Http\Response;
 
@@ -13,7 +12,7 @@ class ValidatorError extends Exception
         return response()->json([
             'status' => 'error',
             'code' => Response::HTTP_METHOD_NOT_ALLOWED,
-            'message' => 'Method not allowed'
+            'message' => 'Method not allowed',
         ]);
     }
 }

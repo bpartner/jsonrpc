@@ -2,7 +2,6 @@
 
 namespace Bpartner\Jsonrpc\Http;
 
-
 use Bpartner\Jsonrpc\RpcFormRequest;
 use Bpartner\Jsonrpc\RpcRequest;
 use Bpartner\Jsonrpc\RpcService;
@@ -30,7 +29,7 @@ class RpcController extends Controller
     }
 
     /**
-     * Invocable method
+     * Invocable method.
      *
      * @return array
      * @throws \Bpartner\Jsonrpc\Exceptions\RpcException
