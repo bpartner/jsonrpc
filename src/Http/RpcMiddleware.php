@@ -1,6 +1,6 @@
 <?php
 
-namespace Bpartner\jsonrpc\src\Http;
+namespace Bpartner\Jsonrpc\Http;
 
 use Closure;
 

@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 
 class ValidatorError extends Exception
 {
-    public function render($request)
+    public function render()
     {
         return response()->json([
             'status' => 'error',
