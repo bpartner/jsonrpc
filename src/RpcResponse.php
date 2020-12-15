@@ -51,7 +51,7 @@ class RpcResponse
      */
     public function toArray(): array
     {
-        if (!$this->id) {
+        if (! $this->id) {
             return [];
         }
 
