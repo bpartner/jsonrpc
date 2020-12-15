@@ -28,7 +28,7 @@ class RpcFormRequest extends FormRequest
         return [
             'jsonrpc' => 'required|in:2.0',
             'method'  => 'required',
-            'params'  => 'required|array',
+            'params'  => 'required|sometimes',
             'id'      => 'required|sometimes',
         ];
     }

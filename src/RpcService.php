@@ -90,7 +90,7 @@ class RpcService
      *
      * @return string
      */
-    private function getNamespace()
+    private function getNamespace(): string
     {
         return app()->getNamespace().config('jsonrpc.rpc_namespace').'\\';
     }
