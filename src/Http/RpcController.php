@@ -34,7 +34,7 @@ class RpcController extends Controller
      * @return array
      * @throws \Bpartner\Jsonrpc\Exceptions\RpcException
      */
-    public function __invoke()
+    public function __invoke(): array
     {
         $rpcService = new RpcService($this->request);
 

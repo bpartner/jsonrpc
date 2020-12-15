@@ -51,6 +51,10 @@ class RpcResponse
      */
     public function toArray(): array
     {
+        if (!$this->id) {
+            return [];
+        }
+
         return [
             'jsonrpc' => '2.0',
             'id' => $this->id,

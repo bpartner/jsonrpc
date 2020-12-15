@@ -40,7 +40,7 @@ class RpcRequest
             }
         }
 
-        $this->id = $data['id'];
+        $this->id = $data['id'] ?? '';
         $this->method = $data['method'];
         $this->params = $data['params'];
     }
