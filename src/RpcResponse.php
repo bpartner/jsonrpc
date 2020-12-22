@@ -134,7 +134,7 @@ class RpcResponse
 
     public function getErrorMessage(): string
     {
-        return $this->status['message'];
+        return $this->status['message'] ?? 'undefined';
     }
 
     public function setRpcMethodName(string $basename): RpcResponse
