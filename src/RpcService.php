@@ -58,7 +58,7 @@ class RpcService
             $rpc = $namespace.ucfirst($class);
             $this->handler = new $rpc($this->data->params());
         } catch (ValidatorError $exception) {
-            $response = $this->response->responseError(
+            $response = $this->response->setError(
                 'RPC: Invalid param: '.$exception->getMessage(),
                 RpcResponse::INVALID_PARAM,
                 $this->data->toArray()
@@ -66,7 +66,7 @@ class RpcService
 
             throw new RpcException($response);
         } catch (\Exception | \Throwable $exception) {
-            $response = $this->response->responseError(
+            $response = $this->response->setError(
                 'RPC: Method not found',
                 RpcResponse::METHOD_NOT_FOUND,
                 $this->data->toArray()

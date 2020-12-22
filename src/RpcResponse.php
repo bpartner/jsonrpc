@@ -14,6 +14,10 @@ class RpcResponse
 
     /** @var string */
     private $id;
+    /**
+     * @var array
+     */
+    private $error;
 
     /**
      * Create new instance.
@@ -27,21 +31,22 @@ class RpcResponse
 
     /**
      * Make Error response.
-     * @param string     $message
-     * @param int        $code
-     * @param null       $data
+     *
+     * @param string $message
+     * @param int    $code
+     * @param null   $data
      *
      * @return array
      */
-    public function responseError($message, $code = self::INTERNAL_ERROR, $data = null)
+    public function responseError(string $message, $code = self::INTERNAL_ERROR, $data = null): array
     {
         return [
             'jsonrpc' => '2.0',
-            'id' => $data['id'] ?? null,
-            'error' => [
+            'id'      => $data['id'] ?? null,
+            'error'   => [
                 'message' => $message,
-                'data' => $data,
-                'code' => $code,
+                'data'    => $data,
+                'code'    => $code,
             ],
         ];
     }
@@ -51,15 +56,22 @@ class RpcResponse
      */
     public function toArray(): array
     {
-        if (! $this->id) {
+        if (!$this->id) {
             return [];
         }
 
-        return [
+        $response = [
             'jsonrpc' => '2.0',
-            'id' => $this->id,
-            'result' => $this->result,
+            'id'      => $this->id,
         ];
+
+        if ($this->error) {
+            $response['error'] = $this->error;
+        } else {
+            $response['result'] = $this->result;
+        }
+
+        return $response;
     }
 
     /**
@@ -76,5 +88,21 @@ class RpcResponse
     public function setId(string $id): void
     {
         $this->id = $id;
+    }
+
+    public function setError(string $message, $code = self::INTERNAL_ERROR, $data = null): RpcResponse
+    {
+        $this->error = collect([
+            'message' => $message,
+            'data'    => $data,
+            'code'    => $code,
+        ]);
+
+        return $this;
+    }
+
+    public function getErrorMessage()
+    {
+        return $this->error->message;
     }
 }

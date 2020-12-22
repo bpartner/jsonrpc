@@ -45,7 +45,7 @@ class RpcFormRequest extends FormRequest
         }
 
         $response = RpcResponse::make()
-            ->responseError(
+            ->setError(
                 'RPC: '.implode('; ', $validator->errors()->all()),
                 RpcResponse::PARSE_ERROR,
                 $this->request->all()
