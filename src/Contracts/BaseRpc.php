@@ -34,7 +34,10 @@ abstract class BaseRpc
     {
         $this->params = $request->params();
         $this->validateParams();
-        $this->response = RpcResponse::make()->setId($request->id());
+        $this->response = RpcResponse::make()
+            ->setId($request->id())
+            ->setRpcMethodName(class_basename($this))
+        ;
     }
 
     /**
@@ -61,7 +64,7 @@ abstract class BaseRpc
         $this->response->setError($message, $code, $data);
     }
 
-    public function setResult(array $data): RpcResponse
+    public function getResponse(array $data): RpcResponse
     {
         return $this->response->setResult($data);
     }

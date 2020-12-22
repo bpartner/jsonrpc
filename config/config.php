@@ -12,4 +12,7 @@ return [
 
     // Use default route with simple rpc middleware
     'use_default_route' => true,
+
+    // Add to response status message
+    'status_message' => env('RPC_STATUS_MESSAGE', true),
 ];

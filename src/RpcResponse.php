@@ -23,6 +23,14 @@ class RpcResponse
     private $error;
 
     /**
+     * @var array
+     */
+    private $status;
+
+    /** @var string */
+    private $rpc_methodName;
+
+    /**
      * Create new instance.
      *
      * @return static
@@ -74,20 +82,34 @@ class RpcResponse
             $response['result'] = $this->result;
         }
 
+        if (config('jsonrpc.status_message')) {
+            $response['status'] = $this->status;
+        }
+
         return $response;
     }
 
     /**
      * @param array $data
+     *
+     * @return \Bpartner\Jsonrpc\RpcResponse
      */
-    public function setResult(array $data): RpcResponse
+    public function setResult(array $data)
     {
+        $this->status = [
+            'message' => "RPC: ({$this->rpc_methodName}): successfully completed",
+            'status'  => 'success',
+        ];
+
         $this->result = $data;
+
         return $this;
     }
 
     /**
      * @param string $id
+     *
+     * @return $this
      */
     public function setId(string $id): RpcResponse
     {
@@ -98,16 +120,27 @@ class RpcResponse
     public function setError(string $message, $code = self::INTERNAL_ERROR, $data = null): RpcResponse
     {
         $this->error = new Fluent([
-            'message' => $message,
             'request' => $data,
             'code'    => $code,
         ]);
 
+        $this->status = [
+            'message' => "RPC: ({$this->rpc_methodName}): {$message}",
+            'status'  => 'error',
+        ];
+
         return $this;
     }
 
-    public function getErrorMessage()
+    public function getErrorMessage(): string
     {
-        return $this->error->message;
+        return $this->status['message'];
+    }
+
+    public function setRpcMethodName(string $basename): RpcResponse
+    {
+        $this->rpc_methodName = $basename;
+
+        return $this;
     }
 }

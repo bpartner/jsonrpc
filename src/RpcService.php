@@ -40,7 +40,7 @@ class RpcService
     public function run(): array
     {
         return $this->handler
-            ->setResult($this->handler->handle())
+            ->getResponse($this->handler->handle())
             ->toArray();
     }
 
@@ -81,6 +81,6 @@ class RpcService
      */
     private function getNamespace(): string
     {
-        return app()->getNamespace().config('jsonrpc.rpc_namespace').'\\';
+        return config('jsonrpc.rpc_namespace').'\\';
     }
 }
