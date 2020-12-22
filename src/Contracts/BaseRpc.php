@@ -2,6 +2,7 @@
 
 namespace Bpartner\Jsonrpc\Contracts;
 
+use Bpartner\Jsonrpc\Exceptions\RpcException;
 use Bpartner\Jsonrpc\Exceptions\ValidatorError;
 use Bpartner\Jsonrpc\RpcRequest;
 use Bpartner\Jsonrpc\RpcResponse;
@@ -59,9 +60,17 @@ abstract class BaseRpc
         }
     }
 
+    /**
+     * @param string $message
+     * @param int    $code
+     * @param array  $data
+     *
+     * @throws \Bpartner\Jsonrpc\Exceptions\RpcException
+     */
     protected function error(string $message, int $code = RpcResponse::INVALID_PARAM, array $data = [])
     {
         $this->response->setError($message, $code, $data);
+        throw new RpcException($this->response);
     }
 
     public function getResponse(array $data): RpcResponse
