@@ -10,7 +10,7 @@ class RpcService
     /**
      * @var \Bpartner\Jsonrpc\RpcRequest
      */
-    private $data;
+    private $request;
     /**
      * @var \Bpartner\Jsonrpc\RpcResponse
      */
@@ -28,10 +28,8 @@ class RpcService
      */
     public function __construct(RpcRequest $data)
     {
-        $this->data = $data;
-        $this->response = new RpcResponse();
+        $this->request = $data;
         $this->setHandler();
-        $this->response->setId($data->id());
     }
 
     /**
@@ -41,9 +39,9 @@ class RpcService
      */
     public function run(): array
     {
-        $this->make();
-
-        return $this->response->toArray();
+        return $this->handler
+            ->setResult($this->handler->handle())
+            ->toArray();
     }
 
     /**
@@ -52,37 +50,28 @@ class RpcService
     private function setHandler()
     {
         $namespace = $this->getNamespace();
-        $class = $this->data->method();
+        $class = $this->request->method();
 
         try {
             $rpc = $namespace.ucfirst($class);
-            $this->handler = new $rpc($this->data->params());
+            $this->handler = new $rpc($this->request);
         } catch (ValidatorError $exception) {
-            $response = $this->response->setError(
+            $this->response->setError(
                 'RPC: Invalid param: '.$exception->getMessage(),
                 RpcResponse::INVALID_PARAM,
-                $this->data->toArray()
+                $this->request->toArray()
             );
 
-            throw new RpcException($response);
+            throw new RpcException($this->response);
         } catch (\Exception | \Throwable $exception) {
-            $response = $this->response->setError(
+            $this->response->setError(
                 'RPC: Method not found',
                 RpcResponse::METHOD_NOT_FOUND,
-                $this->data->toArray()
+                $this->request->toArray()
             );
 
-            throw new RpcException($response);
+            throw new RpcException($this->response);
         }
-    }
-
-    /**
-     * Make your code.
-     */
-    private function make(): void
-    {
-        $result = $this->handler->handle();
-        $this->response->setResult($result);
     }
 
     /**

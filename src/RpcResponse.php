@@ -80,17 +80,19 @@ class RpcResponse
     /**
      * @param array $data
      */
-    public function setResult(array $data): void
+    public function setResult(array $data): RpcResponse
     {
         $this->result = $data;
+        return $this;
     }
 
     /**
      * @param string $id
      */
-    public function setId(string $id): void
+    public function setId(string $id): RpcResponse
     {
         $this->id = $id;
+        return $this;
     }
 
     public function setError(string $message, $code = self::INTERNAL_ERROR, $data = null): RpcResponse

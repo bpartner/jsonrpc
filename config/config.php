@@ -5,7 +5,7 @@
  */
 return [
     // Default namespace for handlers generator
-    'rpc_namespace' => 'RpcHandlers',
+    'rpc_namespace' => 'App\RpcHandlers',
 
     // Bearer token for all request for simple usage
     'token' => env('RPC_TOKEN', '1234567890'),

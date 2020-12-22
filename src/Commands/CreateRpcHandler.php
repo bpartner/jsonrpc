@@ -30,7 +30,7 @@ class CreateRpcHandler extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace.'\\'.config('jsonrpc.rpc_namespace');
+        return config('jsonrpc.rpc_namespace');
     }
 
     protected function getStub()

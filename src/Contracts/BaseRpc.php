@@ -3,6 +3,7 @@
 namespace Bpartner\Jsonrpc\Contracts;
 
 use Bpartner\Jsonrpc\Exceptions\ValidatorError;
+use Bpartner\Jsonrpc\RpcRequest;
 use Bpartner\Jsonrpc\RpcResponse;
 use Illuminate\Support\Facades\Validator;
 
@@ -25,15 +26,15 @@ abstract class BaseRpc
     /**
      * BaseRpc constructor.
      *
-     * @param array $params
+     * @param \Bpartner\Jsonrpc\RpcRequest $request
      *
      * @throws \Bpartner\Jsonrpc\Exceptions\ValidatorError
      */
-    public function __construct(array $params)
+    public function __construct(RpcRequest $request)
     {
-        $this->params = $params;
+        $this->params = $request->params();
         $this->validateParams();
-        $this->response = new RpcResponse();
+        $this->response = RpcResponse::make()->setId($request->id());
     }
 
     /**
@@ -57,6 +58,11 @@ abstract class BaseRpc
 
     protected function error(string $message, int $code = RpcResponse::INVALID_PARAM, array $data = [])
     {
-        return $this->response->setError($message, $code, $data);
+        $this->response->setError($message, $code, $data);
+    }
+
+    public function setResult(array $data): RpcResponse
+    {
+        return $this->response->setResult($data);
     }
 }
