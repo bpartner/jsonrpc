@@ -59,7 +59,7 @@ class RpcResponse
      */
     public function toArray(): array
     {
-        if (!$this->id) {
+        if (!$this->id and !$this->error) {
             return [];
         }
 
@@ -99,7 +99,7 @@ class RpcResponse
     {
         $this->error = new Fluent([
             'message' => $message,
-            'data'    => $data,
+            'request' => $data,
             'code'    => $code,
         ]);
 
