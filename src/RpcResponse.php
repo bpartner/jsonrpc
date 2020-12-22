@@ -2,6 +2,8 @@
 
 namespace Bpartner\Jsonrpc;
 
+use Illuminate\Support\Fluent;
+
 class RpcResponse
 {
     public const PARSE_ERROR = -32700;
@@ -14,8 +16,9 @@ class RpcResponse
 
     /** @var string */
     private $id;
+
     /**
-     * @var array
+     * @var \Illuminate\Support\Fluent
      */
     private $error;
 
@@ -24,7 +27,7 @@ class RpcResponse
      *
      * @return static
      */
-    public static function make()
+    public static function make(): RpcResponse
     {
         return new static();
     }
@@ -92,7 +95,7 @@ class RpcResponse
 
     public function setError(string $message, $code = self::INTERNAL_ERROR, $data = null): RpcResponse
     {
-        $this->error = collect([
+        $this->error = new Fluent([
             'message' => $message,
             'data'    => $data,
             'code'    => $code,
