@@ -13,7 +13,7 @@ class RpcFormRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -23,7 +23,7 @@ class RpcFormRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'jsonrpc' => 'required|in:2.0',
@@ -45,10 +45,11 @@ class RpcFormRequest extends FormRequest
         }
 
         $response = RpcResponse::make()
+            ->setRpcMethodName($this->get('method') ?? 'undefined')
             ->setError(
-                'RPC: '.implode('; ', $validator->errors()->all()),
+                implode('; ', $validator->errors()->all()),
                 RpcResponse::PARSE_ERROR,
-                $this->request->all()
+                $this->all()
             );
 
         throw new RpcException($response);

@@ -27,18 +27,18 @@ abstract class BaseRpc
     /**
      * BaseRpc constructor.
      *
-     * @param \Bpartner\Jsonrpc\RpcRequest $request
+     * @param \Bpartner\Jsonrpc\RpcRequest  $request
+     * @param \Bpartner\Jsonrpc\RpcResponse $response
      *
      * @throws \Bpartner\Jsonrpc\Exceptions\ValidatorError
      */
-    public function __construct(RpcRequest $request)
+    public function __construct(RpcRequest $request, RpcResponse $response)
     {
         $this->params = $request->params();
         $this->validateParams();
-        $this->response = RpcResponse::make()
+        $this->response = $response
             ->setId($request->id())
-            ->setRpcMethodName(class_basename($this))
-        ;
+            ->setRpcMethodName(class_basename($this));
     }
 
     /**
