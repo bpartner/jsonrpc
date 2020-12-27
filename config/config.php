@@ -4,6 +4,7 @@
  * You can place your custom package configuration in here.
  */
 return [
+
     // Default namespace for handlers generator
     'rpc_namespace' => 'App\RpcHandlers',
 
@@ -13,6 +14,13 @@ return [
     // Use default route with simple rpc middleware
     'use_default_route' => true,
 
+    /**
+     * DEBUG section
+     */
+
     // Add to response status message
-    'status_message' => env('RPC_STATUS_MESSAGE', true),
+    'status_message' => env('RPC_STATUS_MESSAGE', false),
+
+    // Error status with request
+    'error_with_request' => env('RPC_ERROR_WITH_REQUEST', false),
 ];

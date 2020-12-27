@@ -120,9 +120,12 @@ class RpcResponse
     public function setError(string $message, $code = self::INTERNAL_ERROR, $data = null): RpcResponse
     {
         $this->error = new Fluent([
-            'request' => $data,
             'code'    => $code,
         ]);
+
+        if ($data && config('jsonrpc.error_with_request')) {
+            $this->error->request = $data;
+        }
 
         $this->status = [
             'message' => "RPC: ({$this->rpc_methodName}): {$message}",

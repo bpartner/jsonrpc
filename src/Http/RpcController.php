@@ -32,11 +32,10 @@ class RpcController extends Controller
      * Invocable method.
      *
      * @return array
-     * @throws \Bpartner\Jsonrpc\Exceptions\RpcException
      */
     public function __invoke(): array
     {
-        $rpcService = new RpcService($this->request);
+        $rpcService = app(RpcService::class, [$this->request]);
 
         return $rpcService->run();
     }

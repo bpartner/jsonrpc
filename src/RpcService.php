@@ -4,6 +4,7 @@ namespace Bpartner\Jsonrpc;
 
 use Bpartner\Jsonrpc\Exceptions\RpcException;
 use Bpartner\Jsonrpc\Exceptions\ValidatorError;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 class RpcService
 {
@@ -22,14 +23,19 @@ class RpcService
     /**
      * RpcService constructor.
      *
-     * @param \Bpartner\Jsonrpc\RpcRequest $data
+     * @param \Bpartner\Jsonrpc\RpcRequest  $request
+     * @param \Bpartner\Jsonrpc\RpcResponse $response
      *
      * @throws \Bpartner\Jsonrpc\Exceptions\RpcException
      */
-    public function __construct(RpcRequest $data)
+    public function __construct(RpcRequest $request, RpcResponse $response)
     {
-        $this->request = $data;
+        $this->request = $request;
+        $this->response = $response
+            ->setId($request->id())
+            ->setRpcMethodName($this->request->method());
         $this->setHandler();
+
     }
 
     /**
@@ -49,21 +55,17 @@ class RpcService
      */
     private function setHandler()
     {
-        $namespace = $this->getNamespace();
-        $class = $this->request->method();
-
         try {
-            $rpc = $namespace.ucfirst($class);
-            $this->handler = new $rpc($this->request);
+            $this->handler = app($this->resolveHandler());
         } catch (ValidatorError $exception) {
             $this->response->setError(
-                'RPC: Invalid param: '.$exception->getMessage(),
+                'RPC: Invalid param: ' . $exception->getMessage(),
                 RpcResponse::INVALID_PARAM,
                 $this->request->toArray()
             );
 
             throw new RpcException($this->response);
-        } catch (\Exception | \Throwable $exception) {
+        } catch (BindingResolutionException $exception) {
             $this->response->setError(
                 'RPC: Method not found',
                 RpcResponse::METHOD_NOT_FOUND,
@@ -82,5 +84,16 @@ class RpcService
     private function getNamespace(): string
     {
         return config('jsonrpc.rpc_namespace').'\\';
+    }
+
+    /**
+     * @return string
+     */
+    private function resolveHandler(): string
+    {
+        $namespace = $this->getNamespace();
+        $class = $this->request->method();
+
+        return $namespace . ucfirst($class);
     }
 }
