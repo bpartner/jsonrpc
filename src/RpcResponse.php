@@ -77,7 +77,7 @@ class RpcResponse
         ];
 
         if ($this->error) {
-            $response['error'] = $this->error;
+            $response['error'] = $this->error->toArray();
         } else {
             $response['result'] = $this->result;
         }
@@ -94,7 +94,7 @@ class RpcResponse
      *
      * @return \Bpartner\Jsonrpc\RpcResponse
      */
-    public function setResult(array $data)
+    public function setResult(array $data): RpcResponse
     {
         $this->status = [
             'message' => "RPC: ({$this->rpc_methodName}): successfully completed",
