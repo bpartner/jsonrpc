@@ -17,6 +17,11 @@ php artisan vendor:publish --tag=config
 ### Configure 
 in `config/jsonrpc.php` set namespace and Bearer token (default 1234567890)
 
+If Bearer token not work, add to your .htaccess file this rule
+```
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+```
 
 ## Basic Usage
 
@@ -69,7 +74,28 @@ You can use any route, middleware and guards for your rpc endpoint.
 
 1. Disable default route in `config/jsonrpc.php`
 2. Create your custom route
-3. Create your controller and use RpcService, for example:
+3. Create your middleware   
+4. Create your controller and use RpcService
+
+Middleware example
+``` php
+class AuthToken
+{
+    public function handle(Request $request, Closure $next)
+    {
+        if ($request->header('x-auth-token') !== config('jsonrpc.token')) {
+            return  response()->json([
+                'status' => 'error',
+                'code' => 401,
+                'message' => 'Unauthorized',
+            ]);
+        }
+        return $next($request);
+    }
+}
+```
+
+Controller example
 
 ``` php
 namespace App\Http\Controllers
@@ -84,13 +110,12 @@ class MyContoller extends Controller
 {
     public function __invoke(RpcFormRequest $request)
     {
-        $rpcService = new RpcService(new RpcRequest($request));
+        $rpcService = app(RpcService::class);
 
         return $rpcService->run();
     }
 }
 ```
-
 ## Important
 
 This package not support Batch request. 

@@ -13,29 +13,17 @@ use Illuminate\Routing\Controller;
 class RpcController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-    /**
-     * @var \Bpartner\Jsonrpc\RpcRequest
-     */
-    private $request;
-
-    /**
-     * RpcController constructor.
-     *
-     * @param \Bpartner\Jsonrpc\RpcFormRequest $request
-     */
-    public function __construct(RpcFormRequest $request)
-    {
-        $this->request = new RpcRequest($request);
-    }
 
     /**
      * Invocable method.
      *
+     * @param \Bpartner\Jsonrpc\RpcFormRequest $request
+     *
      * @return array
      */
-    public function __invoke(): array
+    public function __invoke(RpcFormRequest $request): array
     {
-        $rpcService = app(RpcService::class, [$this->request]);
+        $rpcService = app(RpcService::class);
 
         return $rpcService->run();
     }
