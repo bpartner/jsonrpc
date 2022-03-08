@@ -10,19 +10,21 @@ use Illuminate\Support\Facades\Validator;
 
 abstract class BaseRpc
 {
-    /**
-     * @var array
-     */
-    protected $params;
-    /**
-     * @var \Bpartner\Jsonrpc\RpcResponse
-     */
-    public $response;
+    protected string|array $middlewares = 'guest';
+
+    protected array $params;
+    public RpcResponse $response;
 
     /**
-     * @return array
+     * @throws \Bpartner\Jsonrpc\Exceptions\ValidatorError
      */
-    abstract public function handle(): array;
+    public function handle(): array
+    {
+        $this->validateParams();
+        return $this->call();
+    }
+
+    abstract public function call(): array;
 
     /**
      * BaseRpc constructor.
@@ -30,12 +32,10 @@ abstract class BaseRpc
      * @param \Bpartner\Jsonrpc\RpcRequest  $request
      * @param \Bpartner\Jsonrpc\RpcResponse $response
      *
-     * @throws \Bpartner\Jsonrpc\Exceptions\ValidatorError
      */
     public function __construct(RpcRequest $request, RpcResponse $response)
     {
         $this->params = $request->params();
-        $this->validateParams();
         $this->response = $response
             ->setId($request->id())
             ->setRpcMethodName(class_basename($this));
@@ -56,7 +56,8 @@ abstract class BaseRpc
     {
         $validator = Validator::make($this->params, $this->rule());
         if ($validator->fails()) {
-            throw new ValidatorError(implode('; ', $validator->errors()->all()));
+            $messages = $validator->errors();
+            throw new ValidatorError($this->response, $messages->all(), $messages->messages());
         }
     }
 
@@ -67,7 +68,7 @@ abstract class BaseRpc
      *
      * @throws \Bpartner\Jsonrpc\Exceptions\RpcException
      */
-    protected function error(string $message, int $code = RpcResponse::INVALID_PARAM, array $data = [])
+    protected function error(string $message, int $code = RpcResponse::INVALID_PARAM, array $data = []): void
     {
         $this->response->setError($message, $code, $data);
         throw new RpcException($this->response);
@@ -75,6 +76,31 @@ abstract class BaseRpc
 
     public function getResponse(array $data): RpcResponse
     {
-        return $this->response->setResult($data);
+        return $this->response->getResponse($data);
     }
+
+    public function middlewares(): array
+    {
+        if (is_array($this->middlewares)) {
+            return $this->middlewares;
+        }
+
+        return $this->prepareMiddlewares(config("jsonrpc.middleware.$this->middlewares") ?? []);
+    }
+
+    private function prepareMiddlewares($middlewares): array
+    {
+        $result = [];
+        foreach ($middlewares as $middleware) {
+            $isPresentInConfig = config('jsonrpc.middleware.'.$middleware);
+            if ($isPresentInConfig) {
+                $result[] = config('jsonrpc.middleware.'.$middleware);
+                continue;
+            }
+            $result[] = $middleware;
+        }
+
+        return collect($result)->flatten()->unique()->toArray();
+    }
+
 }

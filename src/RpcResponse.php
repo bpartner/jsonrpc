@@ -3,6 +3,8 @@
 namespace Bpartner\Jsonrpc;
 
 use Illuminate\Support\Fluent;
+use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Pure;
 
 class RpcResponse
 {
@@ -11,45 +13,39 @@ class RpcResponse
     public const METHOD_NOT_FOUND = -32601;
     public const INVALID_PARAM = -32602;
 
-    /** @var array */
-    private $result;
-
-    /** @var string */
-    private $id;
-
-    /**
-     * @var \Illuminate\Support\Fluent
-     */
-    private $error;
-
-    /**
-     * @var array
-     */
-    private $status;
-
-    /** @var string */
-    private $rpc_methodName;
+    private array $result;
+    private string $id;
+    private Fluent $error;
+    private array $status;
+    private string $rpc_methodName;
 
     /**
      * Create new instance.
      *
      * @return static
      */
+    #[Pure]
     public static function make(): RpcResponse
     {
         return new static();
+    }
+
+    public function __construct()
+    {
+        $this->error = new Fluent();
     }
 
     /**
      * Make Error response.
      *
      * @param string $message
-     * @param int    $code
+     * @param  int  $code
      * @param null   $data
      *
      * @return array
      */
-    public function responseError(string $message, $code = self::INTERNAL_ERROR, $data = null): array
+    #[ArrayShape(['jsonrpc' => "string", 'id' => "mixed|null", 'error' => "array"])]
+    public function responseError(string $message, int $code = self::INTERNAL_ERROR, $data = null): array
     {
         return [
             'jsonrpc' => '2.0',
@@ -67,7 +63,7 @@ class RpcResponse
      */
     public function toArray(): array
     {
-        if (!$this->id and !$this->error) {
+        if (!$this->id && !$this->error->toArray()) {
             return [];
         }
 
@@ -76,7 +72,7 @@ class RpcResponse
             'id'      => $this->id,
         ];
 
-        if ($this->error) {
+        if ($this->error->toArray()) {
             $response['error'] = $this->error->toArray();
         } else {
             $response['result'] = $this->result;
@@ -97,7 +93,7 @@ class RpcResponse
     public function setResult(array $data): RpcResponse
     {
         $this->status = [
-            'message' => "RPC: ({$this->rpc_methodName}): successfully completed",
+            'message' => "RPC: ($this->rpc_methodName): successfully completed",
             'status'  => 'success',
         ];
 
@@ -117,7 +113,7 @@ class RpcResponse
         return $this;
     }
 
-    public function setError(string $message, $code = self::INTERNAL_ERROR, $data = null): RpcResponse
+    public function setError(string|array $message, $code = self::INTERNAL_ERROR, $data = null, array $bags = []): RpcResponse
     {
         $this->error = new Fluent([
             'code'    => $code,
@@ -128,9 +124,13 @@ class RpcResponse
         }
 
         $this->status = [
-            'message' => "RPC: ({$this->rpc_methodName}): {$message}",
+            'method' => "RPC: ($this->rpc_methodName)",
+            'message' => is_string($message) ? $message : implode('; ', $message),
             'status'  => 'error',
         ];
+        if ($bags) {
+            $this->status['bags'] = $bags;
+        }
 
         return $this;
     }
@@ -145,5 +145,13 @@ class RpcResponse
         $this->rpc_methodName = $basename;
 
         return $this;
+    }
+
+    public function getResponse(array $data): RpcResponse
+    {
+        if ($this->error->toArray()) {
+            return $this;
+        }
+        return $this->setResult($data);
     }
 }

@@ -3,11 +3,18 @@
 namespace Bpartner\Jsonrpc;
 
 use Bpartner\Jsonrpc\Commands\CreateRpcHandler;
+use Bpartner\Jsonrpc\Contracts\ResolverInterface;
+use Bpartner\Jsonrpc\Contracts\RpcServiceInterface;
 use Bpartner\Jsonrpc\Http\RpcMiddleware;
 use Illuminate\Support\ServiceProvider;
 
 class JsonrpcServiceProvider extends ServiceProvider
 {
+    public array $singletons = [
+        ResolverInterface::class   => RpcResolver::class,
+        RpcServiceInterface::class => RpcService::class,
+    ];
+
     /**
      * Bootstrap the application services.
      */

@@ -15,7 +15,7 @@ class RpcMiddleware
      *
      * @return mixed
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): mixed
     {
         if ($request->bearerToken() !== config('jsonrpc.token')) {
             return  response()->json([

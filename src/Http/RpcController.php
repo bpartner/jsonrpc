@@ -2,6 +2,7 @@
 
 namespace Bpartner\Jsonrpc\Http;
 
+use Bpartner\Jsonrpc\Contracts\RpcServiceInterface;
 use Bpartner\Jsonrpc\RpcFormRequest;
 use Bpartner\Jsonrpc\RpcRequest;
 use Bpartner\Jsonrpc\RpcService;
@@ -21,10 +22,8 @@ class RpcController extends Controller
      *
      * @return array
      */
-    public function __invoke(RpcFormRequest $request): array
+    public function __invoke(RpcFormRequest $request, RpcServiceInterface $service): array
     {
-        $rpcService = app(RpcService::class);
-
-        return $rpcService->run();
+        return $service->run();
     }
 }
