@@ -78,6 +78,7 @@ You can use any route, middleware and guards for your rpc endpoint.
 4. Create your controller and use RpcService
 
 Middleware example
+
 ``` php
 class AuthToken
 {
@@ -108,14 +109,25 @@ use Illuminate\Routing\Controller;
 
 class MyContoller extends Controller
 {
-    public function __invoke(RpcFormRequest $request)
+    public function __invoke(RpcFormRequest $request, RpcServiceInterface $rpcService)
     {
-        $rpcService = app(RpcServiceInterface::class);
-
         return $rpcService->run();
     }
 }
 ```
+
+## Middleware
+
+Create own middleware for any RpcHandler
+```php
+ protected string|array $middlewares = 'guest';
+//or
+ protected string|array $middlewares = [
+    MyMiddleware::class,
+    SecondMiddleware::class
+];
+```
+
 ## Important
 
 This package not support Batch request. 
