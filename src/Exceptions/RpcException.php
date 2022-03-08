@@ -4,11 +4,11 @@ namespace Bpartner\Jsonrpc\Exceptions;
 
 use Bpartner\Jsonrpc\RpcResponse;
 use Exception;
+use Illuminate\Http\JsonResponse;
 
 class RpcException extends Exception
 {
-    /** @var \Bpartner\Jsonrpc\RpcResponse */
-    private $response;
+    private RpcResponse $response;
 
     public function __construct(RpcResponse $response)
     {
@@ -17,15 +17,12 @@ class RpcException extends Exception
         parent::__construct($message);
     }
 
-    /**
-     * @return array
-     */
-    public function render()
+    public function render(): JsonResponse
     {
-        return $this->response->toArray();
+        return response()->json($this->response->toArray(), 400);
     }
 
-    public function report()
+    public function report(): void
     {
         logger()->error($this->response->getErrorMessage(), $this->response->toArray());
     }

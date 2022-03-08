@@ -103,14 +103,14 @@ namespace App\Http\Controllers
 
 use Bpartner\Jsonrpc\RpcFormRequest;
 use Bpartner\Jsonrpc\RpcRequest;
-use Bpartner\Jsonrpc\RpcService;
+use Bpartner\Jsonrpc\RpcServiceInterface; 
 use Illuminate\Routing\Controller;
 
 class MyContoller extends Controller
 {
     public function __invoke(RpcFormRequest $request)
     {
-        $rpcService = app(RpcService::class);
+        $rpcService = app(RpcServiceInterface::class);
 
         return $rpcService->run();
     }

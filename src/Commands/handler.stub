@@ -2,15 +2,16 @@
 
 namespace DummyNamespace;
 
-
 use Bpartner\Jsonrpc\Contracts\BaseRpc;
 
 class DummyClass extends BaseRpc
 {
+    protected string|array $middlewares = 'auth';
+
     /**
      * Rules for validate request parameters
      *
-     * @return array|void
+     * @return array
      */
     protected function rule(): array
     {
@@ -22,7 +23,7 @@ class DummyClass extends BaseRpc
      *
      * @return array
      */
-    public function handle(): array
+    public function call(): array
     {
         return [];
     }

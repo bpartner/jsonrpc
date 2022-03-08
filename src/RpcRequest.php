@@ -2,19 +2,18 @@
 
 namespace Bpartner\Jsonrpc;
 
+use Bpartner\Jsonrpc\Contracts\BaseRpc;
+use Bpartner\Jsonrpc\Contracts\RpcRequestInterface;
+use JetBrains\PhpStorm\ArrayShape;
+
 /**
  * Class RpcRequest.
  */
-class RpcRequest
+class RpcRequest implements RpcRequestInterface
 {
-    /** @var string */
-    protected $method;
-
-    /** @var array */
-    protected $params;
-
-    /** @var string */
-    protected $id;
+    protected string $method;
+    protected array $params;
+    protected string $id;
 
     /**
      * RpcRequest constructor.
@@ -30,14 +29,12 @@ class RpcRequest
     /**
      * @param $data
      *
-     * @return void|array
+     * @return void
      */
-    private function init($data)
+    private function init($data): void
     {
-        if (app()->runningInConsole()) {
-            if (empty($data)) {
-                return [];
-            }
+        if (empty($data) && app()->runningInConsole()) {
+            return;
         }
 
         $this->id = $data['id'] ?? '';
@@ -72,6 +69,7 @@ class RpcRequest
     /**
      * @return array
      */
+    #[ArrayShape(['id' => "string", 'method' => "string", 'params' => "array", 'jsonrpc' => "string"])]
     public function toArray(): array
     {
         return [

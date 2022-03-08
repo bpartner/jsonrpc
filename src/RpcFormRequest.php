@@ -45,6 +45,7 @@ class RpcFormRequest extends FormRequest
         }
 
         $response = RpcResponse::make()
+            ->setId($this->id ?? '')
             ->setRpcMethodName($this->get('method') ?? 'undefined')
             ->setError(
                 implode('; ', $validator->errors()->all()),
